@@ -1,6 +1,5 @@
 from sqlmodel import SQLModel, Field
 from typing import Optional
-from datetime import datetime
 
 # User model
 class User(SQLModel, table=True):
@@ -35,14 +34,13 @@ class Permissions(SQLModel, table=True):
 class DietPlan(SQLModel, table=True):
     diet_plan_id: Optional[int] = Field(default=None, primary_key=True)
     user_id: int = Field(foreign_key="user.user_id")
-    dietitian_user_id: int = Field(foreign_key="user.user_id")  # Links to the dietitian's user ID
+    dietitian_id: int = Field(foreign_key="dietitian.dietitian_id")  # Links to the dietitian's user ID
     proteins: float = Field(nullable=False)  # Amount of Proteins in grams
     carbs: float = Field(nullable=False)  # Amount of Carbohydrates in grams
     fats: float = Field(nullable=False)  # Amount of Fats in grams
-    created_at: datetime = Field(default_factory=datetime.now)
-    updated_at: Optional[datetime] = Field(default=None)
     plan_status: Optional[str] = Field(default="active", max_length=20)
 
+# Dietitian model
 class Dietitian(SQLModel, table=True):
     dietitian_id: Optional[int] = Field(default=None, primary_key=True)
     user_id: int = Field(foreign_key="user.user_id")
@@ -50,4 +48,5 @@ class Dietitian(SQLModel, table=True):
     email: str = Field(max_length=255, nullable=False)  # Added email
     qualification: str = Field(max_length=255, nullable=False)
     experience_years: int = Field(nullable=False)
-    created_at: datetime = Field(default_factory=datetime.now)
+
+# Ensure no timestamp fields are present in the DietPlan or Dietitian models
